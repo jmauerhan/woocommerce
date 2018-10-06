@@ -1672,6 +1672,23 @@ class WC_Tests_CRUD_Orders extends WC_Unit_Test_Case {
 	 */
 	public function test_get_total_shipping_refunded() {
 		$object = new WC_Order();
+		$rate   = new WC_Shipping_Rate( 'flat_rate_shipping', 'Flat rate shipping', '10', array(), 'flat_rate' );
+		$item_1 = new WC_Order_Item_Shipping();
+		$item_1->set_props(
+			array(
+				'method_title' => $rate->label,
+				'method_id'    => $rate->id,
+				'total'        => wc_format_decimal( $rate->cost ),
+				'taxes'        => $rate->taxes,
+			)
+		);
+		foreach ( $rate->get_meta_data() as $key => $value ) {
+			$item_1->add_meta_data( $key, $value, true );
+		}
+		$object->add_item( $item_1 );
+		$object->save();
+		$object->calculate_shipping();
+
 		$this->assertEquals( 0, $object->get_total_shipping_refunded() );
 	}
 
