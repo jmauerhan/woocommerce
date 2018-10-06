@@ -1686,8 +1686,18 @@ class WC_Tests_CRUD_Orders extends WC_Unit_Test_Case {
 			$item_1->add_meta_data( $key, $value, true );
 		}
 		$object->add_item( $item_1 );
-		$object->save();
+		$id = $object->save();
 		$object->calculate_shipping();
+
+		$this->assertEquals( 0, $object->get_total_shipping_refunded() );
+
+		wc_create_refund(
+			array(
+				'order_id'   => $id,
+				'amount'     => '100',
+				'line_items' => array( $item_1 ),
+			)
+		);
 
 		$this->assertEquals( 0, $object->get_total_shipping_refunded() );
 	}
