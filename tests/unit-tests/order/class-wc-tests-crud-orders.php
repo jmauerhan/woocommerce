@@ -1665,6 +1665,17 @@ class WC_Tests_CRUD_Orders extends WC_Unit_Test_Case {
 	public function test_get_total_tax_refunded() {
 		$object = new WC_Order();
 		$this->assertEquals( 0, $object->get_total_tax_refunded() );
+
+		$object->set_total( 200 );
+		$id = $object->save();
+		wc_create_refund(
+			array(
+				'order_id' => $id,
+				'amount' => '100',
+				'line_items' => array(),
+			)
+		);
+		$this->assertEquals( 200, $object->get_total_refunded() );
 	}
 
 	/**
