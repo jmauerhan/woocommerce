@@ -1675,7 +1675,7 @@ class WC_Tests_CRUD_Orders extends WC_Unit_Test_Case {
 				'line_items' => array(),
 			)
 		);
-		$this->assertEquals( 200, $object->get_total_refunded() );
+		$this->assertEquals( 200, $object->get_total_tax_refunded() );
 	}
 
 	/**
